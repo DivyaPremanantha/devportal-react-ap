@@ -3,13 +3,16 @@
  */
 import './OrgLandingPage.css';
 import React from "react";
-import { LoadAndRenderHTML } from "./util";
+import { LoadAndRenderHTML, LoadAndRenderCSS } from "./util";
 import Navbar from './Navbar';
 import Footer from './Footer';
+import fs from 'fs';
 
 function OrgLandingPage() {
   var orgName = window.location.pathname.split('/').pop();
-  LoadAndRenderHTML('/orgTemplate?orgName=' + orgName, 'org-landing-page', '/admin/assets?orgName=' + orgName);
+
+  LoadAndRenderHTML('org-landing-page', '/resources/OrgLandingPage/template/org-landing-page.html');
+  LoadAndRenderCSS('/resources/OrgLandingPage/stylesheet/org-landing-page.css');
 
   return (
     <>

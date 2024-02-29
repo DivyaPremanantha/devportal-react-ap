@@ -1,61 +1,41 @@
-import Markdown from 'react-markdown'
-import { createRoot } from 'react-dom/client'
-import rehypeRaw from 'rehype-raw'
-import React, { useEffect } from 'react';
+export const LoadAndRenderHTML = (targetElementId, assertsFilePath) => {
 
-
-export const LoadAndRenderHTML = (htmlFilePath, targetElementId, assertsFilePath) => {
-
-    var apiData = null;
-
-    useEffect(() => {
-
-        const loadHTML = async () => {
-            const result = await fetch(htmlFilePath);
-            const htmlContent = await result.text();
+    fetch(assertsFilePath)
+        .then(response => response.text())
+        .then(htmlContent => {
             if (document.getElementById(targetElementId) !== null) {
                 document.getElementById(targetElementId).innerHTML = htmlContent;
-
-                if (apiData.markdown.length > 0) {
-                    loadMarkdowm();
-                }
             }
-        }
+        })
+        .catch(error => console.error('Error loading stylesheet file:', error));
+}
 
 
-        const loadMarkdowm = async () => {
-            for (const markdownFilePath of apiData.markdown) {
-                const result = await fetch(markdownFilePath);
-                const markdownContent = await result.text();
-                var elementId = markdownFilePath.split('/').pop().split('.')[0];
-                if ((document.getElementById(elementId) !== null) && markdownContent !== '') {
-                    createRoot(document.getElementById(elementId)).render(<Markdown rehypePlugins={[rehypeRaw]}>{markdownContent}</Markdown>);
-                }
-            }
-        }
+export const LoadAndRenderCSS = (assertsFilePath) => {
 
-        const loadCSS = async () => {
-            const result = await fetch(apiData.stylesheet);
-            const styleSheetContent = await result.text();
+    fetch(assertsFilePath)
+        .then(response => response.text())
+        .then(styleSheetContent => {
             const styleElement = document.createElement('style');
             styleElement.innerHTML = styleSheetContent;
             document.head.appendChild(styleElement);
-            loadHTML();
+        })
 
-        }
+}
 
-        fetch(assertsFilePath)
-            .then(response => response.json())
-            .then(contentData => {
-                if (contentData !== null) {
-                    apiData = contentData;
-                    if (apiData.stylesheet !== null) {
-                        loadCSS();
-                    } else {
-                        loadHTML();
+export const LoadAPIContent = (filePath) => {
+    fetch(filePath)
+        .then(response => response.json())
+        .then(apiData => {
+            var data = apiData.apiInfo.additionalProperties;
+            console.log(data);
+            if (data !== null) {
+                for (const [key, value] of Object.entries(data)) {
+                    if (document.getElementById(key) !== null) {
+                        document.getElementById(key).innerHTML = value;
                     }
                 }
-            })
-            .catch(error => console.error('Error loading stylesheet file:', error));
-    }, []);
+            }
+            return apiData;
+        })
 }

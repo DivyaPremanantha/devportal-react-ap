@@ -1,13 +1,16 @@
 import './API.css';
 import Navbar from "./Navbar";
-import { LoadAndRenderHTML } from "./util";
+import { LoadAndRenderHTML, LoadAndRenderCSS, LoadAPIContent } from "./util";
 import Footer from "./Footer";
 
 function API() {
     var apiName = window.location.pathname.split('/').pop();
     var orgName = window.location.pathname.split('/')[1];
 
-    LoadAndRenderHTML('/apiTemplate?orgName=' + orgName + '&apiName=' + apiName, 'api-landing-page', '/admin/assets?orgName=' + orgName + '&apiName=' + apiName);
+    LoadAndRenderHTML('api-landing-page', '/resources/APILandingPage/template/api-landing-page.html');
+    LoadAndRenderCSS('/resources/APILandingPage/stylesheet/api-landing-page.css');
+    LoadAPIContent('/resources/APIMetadata/apiMedatada.json');
+    // LoadAPIContent('/apiMetadata/' + apiName);
 
     return (
         <>

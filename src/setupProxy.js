@@ -26,4 +26,12 @@ module.exports = function(app) {
       changeOrigin: true,
     })
   );
+
+  app.use(
+    ['/apiMetadata'],
+    createProxyMiddleware({
+      target: 'http://localhost:9090',
+      changeOrigin: true,
+    })
+  );
 };
